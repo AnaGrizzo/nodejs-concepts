@@ -26,19 +26,40 @@ app.get("/repositories", (request, response) => {
 
 app.post("/repositories", (request, response) => {
   const { title, url, techs } = request.body;
-  const repository = { id: uuid(), title, url, techs, likes: 0 };
+  const newRepository = { id: uuid(), title, url, techs, likes: 0 };
 
-  repositories.push(repository);  
+  repositories.push(newRepository);  
 
-  return response.json(repository)
+  return response.json(newRepository)
 });
 
 app.put("/repositories/:id", (request, response) => {
-  // TODO
+  const { id } = request.params;
+  const { title, url, techs } = request.body;
+
+
+  const repositoryIndex = repositories.findIndex(repository => repository.id === id);
+    
+  if (repositoryIndex < 0) {
+    return response.status(400).json({ error: 'Repository not found'})
+  }
+
+  const updatedRepository = {
+    id,
+    title,
+    url,
+    techs,
+    // repository.likes
+  };
+  repositories[repositoryIndex] = updatedRepository;
+  return response.json(updatedRepository);
 });
 
+// A rota deve deletar o repositório com o id presente nos parâmetros da rota;
+
 app.delete("/repositories/:id", (request, response) => {
-  // TODO
+
+
 });
 
 app.post("/repositories/:id/like", (request, response) => {

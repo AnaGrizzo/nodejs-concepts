@@ -55,10 +55,16 @@ app.put("/repositories/:id", (request, response) => {
   return response.json(updatedRepository);
 });
 
-// A rota deve deletar o repositório com o id presente nos parâmetros da rota;
-
 app.delete("/repositories/:id", (request, response) => {
+  const { id } = request.params;
+  const repositoryIndex = repositories.findIndex(repository => repository.id === id);
 
+  if (repositoryIndex < 0) {
+    return response.status(400).json({ error: 'Repository not found' })
+  }
+  repositories.splice(repositoryIndex, 1);
+
+  return response.status(204).send();
 
 });
 

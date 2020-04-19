@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cors());
 
 const repositories = [];
-const likes = '0'
+
 
 
 app.get("/repositories", (request, response) => {
@@ -69,7 +69,28 @@ app.delete("/repositories/:id", (request, response) => {
 });
 
 app.post("/repositories/:id/like", (request, response) => {
-  // TODO
+  const { id } = request.params;
+  const repositoryIndex = repositories.findIndex(repository => repository.id === id);
+  if (repositoryIndex < 0) {
+    return response.status(400).json({ error: 'Repository not found'})
+  }
+
+  const oldRepository = repositories[repositoryIndex];
+  let  { title, url, techs, likes } = oldRepository;
+  likes += 1;
+  console.log(likes);
+
+
+  const updatedRepository = {
+    id,
+    title,
+    url,
+    techs,
+    likes
+  };
+  repositories[repositoryIndex] = updatedRepository;
+  return response.json(updatedRepository);
+
 });
 
 module.exports = app;

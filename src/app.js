@@ -11,8 +11,16 @@ app.use(cors());
 const repositories = [];
 const likes = '0'
 
+
 app.get("/repositories", (request, response) => {
-  // TODO
+  // const { title } = request.query;
+  // const results = title 
+  //   ? projects.filter(project => project.title.includes(title))
+  //   : projects;
+
+  return response.json(repositories);
+
+
 });
 
 

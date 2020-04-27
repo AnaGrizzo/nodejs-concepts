@@ -13,14 +13,7 @@ const repositories = [];
 
 
 app.get("/repositories", (request, response) => {
-  // const { title } = request.query;
-  // const results = title 
-  //   ? projects.filter(project => project.title.includes(title))
-  //   : projects;
-
   return response.json(repositories);
-
-
 });
 
 
@@ -36,21 +29,22 @@ app.post("/repositories", (request, response) => {
 app.put("/repositories/:id", (request, response) => {
   const { id } = request.params;
   const { title, url, techs } = request.body;
-
-
   const repositoryIndex = repositories.findIndex(repository => repository.id === id);
     
   if (repositoryIndex < 0) {
     return response.status(400).json({ error: 'Repository not found'})
   }
 
+  const oldRepository = repositories[repositoryIndex];
+
   const updatedRepository = {
     id,
-    title,
-    url,
-    techs,
-    // repository.likes
+    title: title ? title : oldRepository.title,
+    url: url ? url : oldRepository.url,
+    techs: techs ? techs : oldRepository.techs,
+    likes: oldRepository.likes,
   };
+
   repositories[repositoryIndex] = updatedRepository;
   return response.json(updatedRepository);
 });
@@ -78,8 +72,6 @@ app.post("/repositories/:id/like", (request, response) => {
   const oldRepository = repositories[repositoryIndex];
   let  { title, url, techs, likes } = oldRepository;
   likes += 1;
-  console.log(likes);
-
 
   const updatedRepository = {
     id,
